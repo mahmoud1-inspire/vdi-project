@@ -1,0 +1,29 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: guacamole-ingress
+  namespace: guacamole
+  annotations:
+    kubernetes.io/ingress.class: nginx
+
+    # 🔴 REQUIRED for Guacamole RDP
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "3600"
+
+    # 🔴 REQUIRED for WebSockets
+    nginx.ingress.kubernetes.io/enable-websocket: "true"
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: guacamole
+            port:
+              number: 8080
+  tls:
+  - secretName: guacamole-tls 
+

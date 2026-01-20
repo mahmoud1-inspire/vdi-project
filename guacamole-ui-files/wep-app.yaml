@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: guacamole
+  namespace: guacamole
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: guacamole
+  template:
+    metadata:
+      labels:
+        app: guacamole
+    spec:
+      imagePullSecrets:
+        - name: dockerhub-secret
+      containers:
+        - name: guacamole
+          image: guacamole/guacamole:1.5.5
+          ports:
+            - containerPort: 8080  
+          securityContext:
+              runAsUser: 0
+              runAsGroup: 0
+
+          env:
+            - name: POSTGRES_HOSTNAME
+              value: guacamole-db
+            - name: POSTGRES_DATABASE
+              value: guacamole_db
+            - name: POSTGRES_USER
+              value: guacuser
+            - name: POSTGRES_PASSWORD
+              value: "StrongPassword123!"
+            - name: GUACD_HOSTNAME
+              value: guacd
+            - name: GUACD_PORT
+              value: "4822"       
+          
+          volumeMounts:
+            - name: guac-extensions
+              mountPath: /opt/guacamole/extension
+            - name: guac-certs
+              mountPath: /opt/guacamole/certs
+            - name: guac-pac
+              mountPath: /opt/guacamole/package
+      volumes:
+        - name: guac-extensions
+          persistentVolumeClaim:
+            claimName: guac-extensions-pvc
+        - name: guac-certs
+          hostPath:
+            path: /opt/guacamole/certs
+            type: Directory
+        - name: guac-pac
+          hostPath:
+            path: /opt/guacamole/package
+            type: Directory
+        
+

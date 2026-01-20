@@ -1,0 +1,34 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"v1","kind":"PersistentVolume","metadata":{"annotations":{},"name":"guacamole-pv"},"spec":{"accessModes":["ReadWriteOnce"],"capacity":{"storage":"1Gi"},"hostPath":{"path":"/data/postgres"},"persistentVolumeReclaimPolicy":"Retain","storageClassName":"manual"}}
+    pv.kubernetes.io/bound-by-controller: "yes"
+  creationTimestamp: "2025-12-17T13:49:57Z"
+  finalizers:
+  - kubernetes.io/pv-protection
+  name: guacamole-pv
+  resourceVersion: "9170"
+  uid: 2f6e2bc8-c2d1-4100-b6b3-49034e449c8d
+spec:
+  accessModes:
+  - ReadWriteOnce
+  capacity:
+    storage: 1Gi
+  claimRef:
+    apiVersion: v1
+    kind: PersistentVolumeClaim
+    name: db-storage-guacamole-db-0
+    namespace: guacamole
+    resourceVersion: "9167"
+    uid: 2c9b14ce-29df-493a-b224-73765414fbf6
+  hostPath:
+    path: /data/postgres
+    type: ""
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: manual
+  volumeMode: Filesystem
+status:
+  lastPhaseTransitionTime: "2025-12-17T13:56:27Z"
+  phase: Bound

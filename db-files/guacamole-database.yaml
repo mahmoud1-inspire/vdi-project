@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: guacamole-db
+  namespace: guacamole
+spec:
+  serviceName: guacamole-db
+  replicas: 1
+  selector:
+    matchLabels:
+      app: guacamole-db
+  template:
+    metadata:
+      labels:
+        app: guacamole-db
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:15
+          env:
+            - name: POSTGRESQL_HOSTNAME
+              value: guacamole-db
+            - name: POSTGRESQL_PORT
+              value: "5432"
+            - name: POSTGRESQL_DATABASE
+              value: guacamole_db
+            - name: POSTGRESQL_USER
+              value: guacuser
+            - name: POSTGRESQL_PASSWORD
+              value: "StrongPassword123!"
+          volumeMounts:
+            - name: db-storage
+              mountPath: /var/lib/postgresql/data
+  volumeClaimTemplates:
+    - metadata:
+        name: db-storage
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        storageClassName: manual
+        resources:
+          requests:
+            storage: 1Gi
+
