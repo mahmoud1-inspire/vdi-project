@@ -9,4 +9,5 @@ spec:
   resources:
     requests:
       storage: 1Gi
-
+  volumeMode: Filesystem
+  volumeName: guac-extensions-pv
