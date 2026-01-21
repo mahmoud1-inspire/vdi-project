@@ -23,7 +23,6 @@ spec:
           securityContext:
               runAsUser: 0
               runAsGroup: 0
-
           env:
             - name: POSTGRES_HOSTNAME
               value: guacamole-db
@@ -37,5 +36,24 @@ spec:
               value: guacd
             - name: GUACD_PORT
               value: "4822"       
-          
+          volumeMounts:
+            - name: guac-extensions
+              mountPath: /opt/guacamole/extension
+            - name: guac-certs
+              mountPath: /opt/guacamole/certs
+            - name: guac-pac
+              mountPath: /opt/guacamole/package
+      volumes:
+        - name: guac-extensions
+          persistentVolumeClaim:
+            claimName: guac-extensions-pvc
+        - name: guac-certs
+          hostPath:
+            path: /opt/guacamole/certs
+            type: Directory
+        - name: guac-pac
+          hostPath:
+            path: /opt/guacamole/package
+            type: Directory
+
 
